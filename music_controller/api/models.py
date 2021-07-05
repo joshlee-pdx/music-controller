@@ -16,8 +16,8 @@ def generate_unique_code():
 
 # Create your models here.
 class Room(models.Model):
-  code = models.CharField(max_length=8, default=generate_unique_code, unique=True)
-  host = models.CharField(max_length=50, unique=True)
+  code = models.CharField(max_length=8, default=generate_unique_code, unique=True) # Room code for rooms. Auto generated and needs to be unique
+  host = models.CharField(max_length=50, unique=True) # Can only have 1 host, which will be determined by session key
   guest_can_pause = models.BooleanField(null=False, default=False) # By setting null=False we require a selection
-  votes_to_skip = models.IntegerField(null=False, default=1)
+  votes_to_skip = models.IntegerField(null=False, default=1) # Number of votes required to skip song
   created_at = models.DateTimeField(auto_now_add=True) # Automatically add the date and time room was created
