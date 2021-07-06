@@ -49,7 +49,7 @@ export default class RoomJoinPage extends Component{
       }),
     };
 
-    // Send request to link and take response, convert it to json and log it
+    // Send post request and take response, convert it to json and then redirect to new room
     fetch('/api/create-room', requestOptions)
       .then((response) => response.json())
       .then((data) => this.props.history.push('/room/' + data.code));
