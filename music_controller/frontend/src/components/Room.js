@@ -10,14 +10,20 @@ export default class Room extends Component {
       guestCanPause: false,
       isHost: false,
       showSettings: false,
+      spotifyAuthenticated: false,
     };
+    // Get room code for current room
     this.roomCode = this.props.match.params.roomCode;
+
+    // Bind functions to this
     this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
     this.updateShowSettings = this.updateShowSettings.bind(this);
     this.renderSettingsButton = this.renderSettingsButton.bind(this);
     this.renderSettings = this.renderSettings.bind(this);
     this.getRoomDetails = this.getRoomDetails.bind(this);
+    this.authenticateSpotify = this.authenticateSpotify.bind(this);
 
+    // Display current room details
     this.getRoomDetails();
   }
 
@@ -38,7 +44,26 @@ export default class Room extends Component {
         guestCanPause: data.guest_can_pause,
         isHost: data.is_host,
       });
+
+      if(this.state.isHost) // Authenticate user only if they are the host after state is set
+        this.authenticateSpotify();
     });
+  }
+
+  // Check to see if user is authenticated, and if not, authenticate them
+  authenticateSpotify() {
+    fetch('/spotify/is-authenticated')
+      .then((response) => response.json())
+      .then((data)=>{
+        this.setState({spotifyAuthenticated: data.status});
+        if(!data.status){ // If not authenticated, then authenticate
+          fetch('/spotify/get-auth-url')
+            .then((response) => response.json())
+            .then((data)=> {
+              window.location.replace(data.url); // Redirect to spotify page
+            });
+        }
+      });
   }
 
   leaveButtonPressed (){
