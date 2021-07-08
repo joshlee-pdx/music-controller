@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  Grid,
-  Typography,
-  Card,
-  IconButton,
-  LinearProgress,
-} from "@material-ui/core";
+import { Grid, Typography, Card, IconButton, LinearProgress, } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
@@ -14,6 +8,23 @@ export default class MusicPlayer extends Component {
   constructor(props) {
     super(props);
   }
+
+  pauseSong(){
+    const requestOptions = {
+      method: "PUT",
+      headers: {"Content-Type": "application/json"},
+    };
+    fetch("/spotify/pause", requestOptions);
+  }
+
+  playSong(){
+    const requestOptions = {
+      method: "PUT",
+      headers: {"Content-Type": "application/json"},
+    };
+    fetch("/spotify/play", requestOptions);
+  }
+  
 
   render() {
     const songProgress = (this.props.time / this.props.duration) * 100;
@@ -32,7 +43,7 @@ export default class MusicPlayer extends Component {
               {this.props.artist}
             </Typography>
             <div>
-              <IconButton>
+              <IconButton onClick={() => {this.props.is_playing ? this.pauseSong() : this.playSong();}}>
                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
               </IconButton>
               <IconButton>
